@@ -28,7 +28,7 @@ export default async function Home({
             <h1 className="text-center text-4xl font-semibold text-[#ffb400] py-10">
                 Pedidos
             </h1>
-            <main className="w-full">
+            <main className="w-full ">
                 <SaleForm
                     searchParams={searchParams}
                     customers={customers}

@@ -53,10 +53,10 @@ export const SaleForm = ({
     return (
         <form
             onSubmit={handleSubmit}
-            className="w-full flex flex-col items-center gap-5 justify-center"
+            className="w-full flex flex-col items-center gap-5 justify-center md:flex-row "
         >
-            <div className="w-full flex flex-col items-center gap-5 justify-center">
-                <div className="flex gap-2 items-center w-full justify-center px-10">
+            <div className="w-full  flex flex-col items-center gap-5 justify-center md:justify-start  md:w-8/12 height-120px">
+                <div className="flex gap-2 items-center w-full justify-center px-5 xs:px-10 flex-col xs:flex-row md:flex-col">
                     {saleType === 'delivery' && (
                         <PhoneInput customers={customers} />
                     )}
@@ -72,7 +72,7 @@ export const SaleForm = ({
                         />
                     </label>
                 </div>
-                <div className="flex gap-5 self-start px-10">
+                <div className="flex gap-5 self-start px-5 xs:px-10  flex-col xs:flex-row md:flex-col">
                     <label htmlFor="" className="flex gap-2 items-center">
                         <span>Pedido a domicilio</span>
                         <input
@@ -113,7 +113,7 @@ export const SaleForm = ({
                     </label>
                 </div>
                 {saleType === 'delivery' && (
-                    <div className="flex gap-2 items-center w-full justify-center px-10">
+                    <div className="flex gap-2 items-center w-full justify-center px-10 flex-col sm:flex-row md:flex-col">
                         <label className="flex flex-col w-full">
                             <span>Direccion</span>
                             <div className="flex gap-1 items-center">
@@ -162,13 +162,13 @@ export const SaleForm = ({
                         </label>
                         <label
                             htmlFor="deliveryPrice"
-                            className="flex flex-col"
+                            className="flex flex-col self-start"
                         >
                             <span>Domicilio</span>
                             <input
                                 autoComplete="off"
                                 placeholder="Domicilio"
-                                className="border rounded-md pl-2 py-1 focus:outline-none focus:boder-none w-24 flex justify-center items-center"
+                                className="border rounded-md pl-2 py-1 focus:outline-none focus:boder-none w-24 flex justify-center items-center "
                                 type="text"
                                 name="deliveryPrice"
                                 id="deliveryPrice"
@@ -197,7 +197,7 @@ export const SaleForm = ({
                 </button>
             </div>
 
-            <div className="flex flex-col w-full ">
+            <div className="flex flex-col w-full height-120px">
                 <ProductsInSale
                     pendingProductsInSale={productsInSale}
                     updateProductsInSale={updateProductsInSale}

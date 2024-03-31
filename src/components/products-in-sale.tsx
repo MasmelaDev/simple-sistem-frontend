@@ -1,4 +1,4 @@
-import { IconTrash } from '@tabler/icons-react'
+import { IconMinus, IconPlus, IconTrash } from '@tabler/icons-react'
 import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
@@ -72,8 +72,41 @@ export const ProductsInSale = ({
         )
         updateProductsInSale(updatedProductsInSale)
     }
+
+    const updateAmountProductInSale = (
+        productInSale: pendingProductInSale,
+        modes: 'add' | 'sub'
+    ) => {
+        const updatedProductInSale = {
+            ...productInSale,
+            amount:
+                modes === 'add'
+                    ? productInSale.amount + 1
+                    : productInSale.amount - 1,
+            total:
+                productInSale.product.price *
+                (modes === 'add'
+                    ? productInSale.amount + 1
+                    : productInSale.amount - 1),
+        }
+        if (updatedProductInSale.amount === 0) {
+            deleteProductInSale(updatedProductInSale.product)
+            return null
+        }
+        const updatedProductsInSale = pendingProductsInSale.map(
+            (productInSale) => {
+                if (
+                    productInSale.product.id === updatedProductInSale.product.id
+                ) {
+                    return updatedProductInSale
+                }
+                return productInSale
+            }
+        )
+        updateProductsInSale(updatedProductsInSale)
+    }
     return (
-        <aside className="flex flex-col w-full p-10 ">
+        <div className="flex flex-col w-full p-5  ">
             <div className="min-h-60 shadow-sm shadow-black/20 rounded-md overflow-hidden">
                 <table className="w-full text-[#333] font-medium   ">
                     <thead>
@@ -98,9 +131,37 @@ export const ProductsInSale = ({
                                         type: 'tween',
                                     }}
                                     key={productInSale.product.id}
-                                    className=" h-12 bg-white text-center"
+                                    className=" h-12 bg-white text-center px-1"
                                 >
-                                    <td>{productInSale.amount}</td>
+                                    <td className="flex gap-2 justify-center">
+                                        <button
+                                            onClick={() =>
+                                                updateAmountProductInSale(
+                                                    productInSale,
+                                                    'sub'
+                                                )
+                                            }
+                                            type="button"
+                                            className=" border  rounded-md text-[#444] border-[#888] active:scale-90 w-3/12 max-w-8 text-center grid place-content-center  transition-all"
+                                        >
+                                            <IconMinus />
+                                        </button>
+                                        <span className=" border rounded-md text-[#444] border-[#888] font-semibold w-6/12 max-w-8 grid place-content-center">
+                                            {productInSale.amount}
+                                        </span>
+                                        <button
+                                            onClick={() =>
+                                                updateAmountProductInSale(
+                                                    productInSale,
+                                                    'add'
+                                                )
+                                            }
+                                            type="button"
+                                            className=" border rounded-md text-[#444] border-[#888] active:scale-90 w-3/12 max-w-8 grid place-content-center  transition-all"
+                                        >
+                                            <IconPlus />
+                                        </button>
+                                    </td>
                                     <td>{productInSale.product.name}</td>
                                     <td>{productInSale.total}</td>
                                     <td className="flex h-12 w-full justify-center items-center">
@@ -155,6 +216,6 @@ export const ProductsInSale = ({
                     ))}
                 </article>
             </section>
-        </aside>
+        </div>
     )
 }

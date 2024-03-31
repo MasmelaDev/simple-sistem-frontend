@@ -60,7 +60,7 @@ export const PhoneInput = ({
                     {customersFiltered.map((customer) => (
                         <li
                             onClick={() => fillForm(customer)}
-                            className="w-full text-center cursor-pointer border-b hover:bg-[#eee] py-2"
+                            className="w-full text-center font-medium cursor-pointer border-b hover:bg-[#eee] py-2"
                             key={customer.id}
                             value={customer.id}
                         >
