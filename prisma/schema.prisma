@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model categories {
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  products products[]
+}
+
+model domiciliary {
+  id    Int     @id @default(autoincrement())
+  name  String
+  sales sales[]
+}
+
+model products {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique
+  price          Int
+  costo          Int?
+  active         Boolean          @default(true)
+  category       categories       @relation(fields: [categoryId], references: [id])
+  categoryId     Int
+  createdAt      DateTime         @default(now())
+  productsInSale productsInSale[]
+}
+
+enum saleType {
+  delivery
+  outside
+  pickUp
+}
+
+enum saleStatus {
+  pending
+  paid
+}
+
+model sales {
+  id             Int              @id @default(autoincrement())
+  productsInSale productsInSale[]
+  type           saleType
+  status         saleStatus
+  observations   String?
+  customers      customers?       @relation(fields: [customersId], references: [id])
+  customersId    Int?
+  deliveryPrice  Int?
+  domiciliaryId  Int?
+  domiciliary    domiciliary?     @relation(fields: [domiciliaryId], references: [id])
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model productsInSale {
+  id        Int      @id @default(autoincrement())
+  amount    Int
+  total     Int
+  sale      sales    @relation(fields: [saleId], references: [id])
+  saleId    Int
+  product   products @relation(fields: [productId], references: [id])
+  productId Int
+}
+
+model address {
+  id             Int          @id @default(autoincrement())
+  street         String
+  number         String
+  neighborhood   neighborhood @relation(fields: [neighborhoodId], references: [id])
+  neighborhoodId Int
+  customer       customers?
+}
+
+model neighborhood {
+  id      Int       @id @default(autoincrement())
+  name    String
+  address address[]
+}
+
+model customers {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String?
+  createdAt DateTime @default(now())
+  phone     String
+  address   address  @relation(fields: [addressId], references: [id])
+  addressId Int      @unique
+  sales     sales[]
+}
