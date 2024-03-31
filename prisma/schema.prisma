@@ -39,7 +39,7 @@ model products {
 
 enum saleType {
   delivery
-  outside
+  eatHere
   pickUp
 }
 
