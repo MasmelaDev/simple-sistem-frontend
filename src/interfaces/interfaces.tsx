@@ -1,8 +1,11 @@
 import {
+    type productsInSale,
     type address,
     type customers,
     type neighborhood,
     type products,
+    type domiciliary,
+    type sales,
 } from '@prisma/client'
 
 export interface pendingProductInSale {
@@ -16,4 +19,12 @@ export type ExtendedCustomers = customers & {
 }
 export type ExtendedAddress = address & {
     neighborhood: neighborhood
+}
+export type ExtendedProductsInSale = productsInSale & {
+    product: products
+}
+export type ExtendedSales = sales & {
+    productsInSale: ExtendedProductsInSale[]
+    customers: ExtendedCustomers
+    domiciliary: domiciliary
 }

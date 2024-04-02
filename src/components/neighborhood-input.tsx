@@ -54,12 +54,12 @@ export const NeighborhoodInput = ({
 
             {showNeighborhoodsOptions && (
                 <div
-                    className="bg-white  absolute top-[60px]    z-10 rounded-b-md font-medium shadow-md"
+                    className="bg-white max-h-60 overflow-y-auto absolute top-[60px]  w-full z-30 rounded-b-md font-medium shadow-md border border-t-0"
                     id="neighborhoodsOptions"
                 >
                     {neighborhoodsFiltered.map((neighborhood) => (
                         <span
-                            className="w-[196px] flex justify-center cursor-pointer border-b hover:bg-[#eee] py-2"
+                            className="w-full flex justify-center cursor-pointer border-b hover:bg-[#eee] py-2"
                             onClick={handleNeighborhoodClick}
                             key={neighborhood.id}
                         >

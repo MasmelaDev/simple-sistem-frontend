@@ -94,7 +94,7 @@ model customers {
   email     String?
   createdAt DateTime @default(now())
   phone     String
-  address   address  @relation(fields: [addressId], references: [id])
-  addressId Int      @unique
+  address   address? @relation(fields: [addressId], references: [id])
+  addressId Int?     @unique
   sales     sales[]
 }

@@ -12,8 +12,11 @@ export const PhoneInput = ({
         const customersFiltered = customers.filter((customers) =>
             customers.phone.includes(e.target.value)
         )
+        const customersWithAddress = customersFiltered.filter(
+            (customer) => customer.id !== 1 && customer.address
+        )
 
-        setCustomersFiltered(customersFiltered)
+        setCustomersFiltered(customersWithAddress)
         if (e.target.value.length === 0) {
             setCustomersFiltered(null)
         }
@@ -56,7 +59,7 @@ export const PhoneInput = ({
                 id="phone"
             />
             {customersFiltered && (
-                <ul className="bg-white absolute w-full top-[60px] z-50 max-h-60 overflow-y-auto">
+                <ul className="bg-white absolute w-full top-[60px] z-50 max-h-60 overflow-y-auto shadow-md  rounded-b-md border border-t-0">
                     {customersFiltered.map((customer) => (
                         <li
                             onClick={() => fillForm(customer)}

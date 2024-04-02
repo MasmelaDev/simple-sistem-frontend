@@ -6,6 +6,7 @@ import { getCategories, getProducts } from '@/actions/actions'
 import { type categories, type products } from '@prisma/client'
 import { useEffect, useState } from 'react'
 import { type pendingProductInSale } from '@/interfaces/interfaces'
+import { formatPrice } from '@/lib/formats'
 
 export const ProductsInSale = ({
     searchParams,
@@ -107,82 +108,82 @@ export const ProductsInSale = ({
     }
     return (
         <div className="flex flex-col w-full p-5  ">
-            <div className="min-h-60 shadow-sm shadow-black/20 rounded-md overflow-hidden">
-                <table className="w-full text-[#333] font-medium   ">
-                    <thead>
-                        <tr className="bg-[#ffb400] h-10 font-bold text-white">
-                            <th className="w-3/12">Cant</th>
-                            <th className="w-5/12">Producto</th>
-                            <th className="w-3/12">Total</th>
-                            <th className="w-1/12"></th>
-                        </tr>
-                    </thead>
-                    <tbody className="">
-                        <AnimatePresence>
-                            {pendingProductsInSale.map((productInSale) => (
-                                <motion.tr
-                                    layoutId={`${productInSale.product.id}`}
-                                    layout
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{
-                                        duration: 0.2,
-                                        type: 'tween',
-                                    }}
-                                    key={productInSale.product.id}
-                                    className=" h-12 bg-white text-center px-1"
-                                >
-                                    <td className="flex gap-2 justify-center">
-                                        <button
-                                            onClick={() =>
-                                                updateAmountProductInSale(
-                                                    productInSale,
-                                                    'sub'
-                                                )
-                                            }
-                                            type="button"
-                                            className=" border  rounded-md text-[#444] border-[#888] active:scale-90 w-3/12 max-w-8 text-center grid place-content-center  transition-all"
-                                        >
-                                            <IconMinus />
-                                        </button>
-                                        <span className=" border rounded-md text-[#444] border-[#888] font-semibold w-6/12 max-w-8 grid place-content-center">
-                                            {productInSale.amount}
-                                        </span>
-                                        <button
-                                            onClick={() =>
-                                                updateAmountProductInSale(
-                                                    productInSale,
-                                                    'add'
-                                                )
-                                            }
-                                            type="button"
-                                            className=" border rounded-md text-[#444] border-[#888] active:scale-90 w-3/12 max-w-8 grid place-content-center  transition-all"
-                                        >
-                                            <IconPlus />
-                                        </button>
-                                    </td>
-                                    <td>{productInSale.product.name}</td>
-                                    <td>{productInSale.total}</td>
-                                    <td className="flex h-12 w-full justify-center items-center">
-                                        <button
-                                            onClick={() => {
-                                                deleteProductInSale(
-                                                    productInSale.product
-                                                )
-                                            }}
-                                            type="button"
-                                            className="p-1 rounded-lg bg-red-500 scale-90 hover:scale-100 transition-all"
-                                        >
-                                            <IconTrash className="text-white " />
-                                        </button>
-                                    </td>
-                                </motion.tr>
-                            ))}
-                        </AnimatePresence>
-                    </tbody>
-                </table>
-            </div>
+            <table className="w-full text-[#333] font-medium  shadow shadow-black/20 rounded-md overflow-hidden">
+                <thead>
+                    <tr className="bg-[#ffb400] h-10 font-bold text-white">
+                        <th className="w-3/12">Cant</th>
+                        <th className="w-5/12">Producto</th>
+                        <th className="w-3/12">Total</th>
+                        <th className="w-1/12"></th>
+                    </tr>
+                </thead>
+                <tbody className="">
+                    <AnimatePresence>
+                        {pendingProductsInSale.map((productInSale) => (
+                            <motion.tr
+                                layoutId={`${productInSale.product.id}`}
+                                layout
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{
+                                    duration: 0.2,
+                                    type: 'tween',
+                                }}
+                                key={productInSale.product.id}
+                                className=" h-12 bg-white text-center px-1 odd:bg-white even:bg-gray-100 transition-all"
+                            >
+                                <td className="flex gap-2 justify-center">
+                                    <button
+                                        onClick={() =>
+                                            updateAmountProductInSale(
+                                                productInSale,
+                                                'sub'
+                                            )
+                                        }
+                                        type="button"
+                                        className=" border  rounded-md text-[#444] border-[#888] active:scale-90 w-3/12 max-w-8 text-center grid place-content-center  transition-all"
+                                    >
+                                        <IconMinus />
+                                    </button>
+                                    <span className=" border rounded-md text-[#444] border-[#888] font-semibold w-6/12 max-w-8 grid place-content-center">
+                                        {productInSale.amount}
+                                    </span>
+                                    <button
+                                        onClick={() =>
+                                            updateAmountProductInSale(
+                                                productInSale,
+                                                'add'
+                                            )
+                                        }
+                                        type="button"
+                                        className=" border rounded-md text-[#444] border-[#888] active:scale-90 w-3/12 max-w-8 grid place-content-center  transition-all"
+                                    >
+                                        <IconPlus />
+                                    </button>
+                                </td>
+                                <td>{productInSale.product.name}</td>
+                                <td>
+                                    {formatPrice.format(productInSale.total)}
+                                </td>
+                                <td className="flex h-12 w-full justify-center items-center">
+                                    <button
+                                        onClick={() => {
+                                            deleteProductInSale(
+                                                productInSale.product
+                                            )
+                                        }}
+                                        type="button"
+                                        className="p-1 rounded-lg bg-red-500 scale-90 hover:scale-100 transition-all"
+                                    >
+                                        <IconTrash className="text-white " />
+                                    </button>
+                                </td>
+                            </motion.tr>
+                        ))}
+                    </AnimatePresence>
+                </tbody>
+            </table>
 
             <section className="w-full mt-10">
                 <nav>

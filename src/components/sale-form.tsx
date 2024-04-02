@@ -9,6 +9,7 @@ import {
 } from '@/interfaces/interfaces'
 import { PhoneInput } from './phone-input'
 import { type neighborhood, type domiciliary } from '@prisma/client'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export const SaleForm = ({
     searchParams,
@@ -25,7 +26,7 @@ export const SaleForm = ({
     const [productsInSale, setProductsInSale] = useState<
         pendingProductInSale[]
     >([])
-
+    const [error, setError] = useState('')
     const updateProductsInSale = (
         pendingProductInSale: pendingProductInSale[]
     ) => {
@@ -34,17 +35,35 @@ export const SaleForm = ({
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        if (!productsInSale.length) return
+        if (!productsInSale.length) {
+            setError('Agrega productos a la venta')
+            setTimeout(() => {
+                setError('')
+            }, 3000)
+            return
+        }
         const formData = new FormData(e.currentTarget)
         const jsonProductsInSale = JSON.stringify(productsInSale)
         formData.append('productsInSale', jsonProductsInSale)
 
-        const neighborhoodFormData = formData.get('neighborhood')
-        const neighborhoodId = neighborhoods.find(
-            (neighborhood) => neighborhood.name === neighborhoodFormData
-        )?.id
-        if (!neighborhoodId) return
-        formData.set('neighborhood', neighborhoodId.toString())
+        if (saleType === 'delivery') {
+            const neighborhoodFormData = formData
+                .get('neighborhood')
+                ?.toString()
+                .toLowerCase()
+            const neighborhoodId = neighborhoods.find(
+                (neighborhood) =>
+                    neighborhood.name.toLowerCase() === neighborhoodFormData
+            )?.id
+            if (!neighborhoodId) {
+                setError('Barrio no encontrado')
+                setTimeout(() => {
+                    setError('')
+                }, 3000)
+                return
+            }
+            formData.set('neighborhood', neighborhoodId.toString())
+        }
         e.currentTarget.reset()
         await addSale(formData)
         setProductsInSale([])
@@ -55,10 +74,29 @@ export const SaleForm = ({
             onSubmit={handleSubmit}
             className="w-full flex flex-col items-center gap-5 justify-center md:flex-row "
         >
-            <div className="w-full  flex flex-col items-center gap-5 justify-center md:justify-start  md:w-8/12 height-120px">
+            <div className="w-full  flex flex-col items-center gap-5 justify-center md:justify-start  md:w-8/12 lg:w-11/12 height-120px">
                 <div className="flex gap-2 items-center w-full justify-center px-5 xs:px-10 flex-col xs:flex-row md:flex-col">
                     {saleType === 'delivery' && (
                         <PhoneInput customers={customers} />
+                    )}
+                    {saleType === 'pickUp' && (
+                        <label
+                            htmlFor="phone"
+                            className="flex flex-col w-full relative"
+                        >
+                            <span>Telefono</span>
+                            <input
+                                autoComplete="off"
+                                autoCorrect="off"
+                                pattern="^\d{3} \d{7}$"
+                                placeholder="000 0000000"
+                                required
+                                className="border rounded-md pl-2 py-1 focus:outline-none focus:boder-none "
+                                type="text"
+                                name="phone"
+                                id="phone"
+                            />
+                        </label>
                     )}
                     <label htmlFor="name" className="flex flex-col w-full">
                         <span>Nombre</span>
@@ -113,7 +151,7 @@ export const SaleForm = ({
                     </label>
                 </div>
                 {saleType === 'delivery' && (
-                    <div className="flex gap-2 items-center w-full justify-center px-10 flex-col sm:flex-row md:flex-col">
+                    <div className="flex gap-2 items-center w-full justify-center px-5 xs:px-10  flex-col sm:flex-row md:flex-col">
                         <label className="flex flex-col w-full">
                             <span>Direccion</span>
                             <div className="flex gap-1 items-center">
@@ -143,8 +181,8 @@ export const SaleForm = ({
                             <span>Domiciliario</span>
                             <select
                                 className="border rounded-md pl-2 py-1 focus:outline-none focus:boder-none"
-                                name="delivery"
-                                id="delivery"
+                                name="domiciliary"
+                                id="domiciliary"
                             >
                                 <option value="1">NS</option>
                                 {domiciliaries.map(
@@ -167,9 +205,9 @@ export const SaleForm = ({
                             <span>Domicilio</span>
                             <input
                                 autoComplete="off"
-                                placeholder="Domicilio"
+                                placeholder="$"
                                 className="border rounded-md pl-2 py-1 focus:outline-none focus:boder-none w-24 flex justify-center items-center "
-                                type="text"
+                                type="number"
                                 name="deliveryPrice"
                                 id="deliveryPrice"
                                 required
@@ -180,7 +218,7 @@ export const SaleForm = ({
 
                 <label
                     htmlFor="observations"
-                    className="self-start px-10 w-full "
+                    className="self-start xs:px-10 w-full px-5 "
                 >
                     <span>Observaciones</span>
                     <textarea
@@ -189,12 +227,27 @@ export const SaleForm = ({
                         id="observations"
                     ></textarea>
                 </label>
-                <button
-                    type="submit"
-                    className="self-start ml-10 py-2 px-5 rounded-md  font-medium bg-[#ffb400] hover:bg-[#ff9d00] transition-all text-white shadow-sm shadow-black/20"
-                >
-                    Enviar venta
-                </button>
+                <div className="self-start flex items-center gap-5">
+                    <button
+                        type="submit"
+                        className=" ml-10 py-2 px-5 rounded-md  font-medium bg-[#ffb400] hover:bg-[#ff9d00] transition-all text-white shadow-sm shadow-black/20"
+                    >
+                        Enviar venta
+                    </button>
+                    <AnimatePresence>
+                        {error && (
+                            <motion.p
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 0.2 }}
+                                exit={{ opacity: 0 }}
+                                className="text-red-500 font-medium"
+                            >
+                                {error}
+                            </motion.p>
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
 
             <div className="flex flex-col w-full height-120px">

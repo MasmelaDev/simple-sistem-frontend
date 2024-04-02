@@ -12,3 +12,25 @@ body {
     min-height: calc(100vh - 140px);
     }
 }
+
+input[type="radio"] {
+    /* Ocultar el punto de selección predeterminado */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Establecer el tamaño deseado del punto de selección */
+    width: 16px;
+    height: 16px;;
+    /* Establecer el borde y el radio de la esquina para que se parezca a un círculo */
+    border: 2px solid #555;
+    border-radius: 50%;
+    /* Establecer el fondo para el punto no seleccionado */
+    background-color: #fff;
+    /* Establecer el margen para separarlos */
+  }
+  
+  /* Estilo para cuando el input de radio está marcado */
+  input[type="radio"]:checked {
+    /* Cambiar el fondo para el punto seleccionado */
+    background-color: #ffb400; /* Cambia el color a amarillo */
+  }
