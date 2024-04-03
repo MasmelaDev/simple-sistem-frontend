@@ -1,8 +1,21 @@
+'use client'
+import { createNeighborhood, createDomiciliary } from '@/actions/actions'
+import { type FormEvent } from 'react'
 const Configuracion = () => {
+    const neighborhoodSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        const formData = new FormData(e.currentTarget)
+        await createNeighborhood(formData)
+        e.currentTarget.reset()
+    }
+    const domiciliarySubmit = async (e: FormEvent<HTMLFormElement>) => {
+        const formData = new FormData(e.currentTarget)
+        await createDomiciliary(formData)
+        e.currentTarget.reset()
+    }
     return (
         <main className="pt-16 flex flex-col items-center justify-center min-h-screen ">
             <aside className="flex flex-col xs:flex-row gap-5 p-3 absolute top-16 w-full justify-center">
-                <form className="sm:w-64" action="">
+                <form onSubmit={neighborhoodSubmit} className="sm:w-64">
                     <label
                         htmlFor="neighborhood"
                         className="flex flex-col w-full"
@@ -21,7 +34,7 @@ const Configuracion = () => {
                         Crear
                     </button>
                 </form>
-                <form className="sm:w-64" action="">
+                <form className="sm:w-64" onSubmit={domiciliarySubmit}>
                     <label
                         htmlFor="domiciliary"
                         className="flex flex-col w-full"

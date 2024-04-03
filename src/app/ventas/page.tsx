@@ -1,6 +1,6 @@
 import { db } from '@/lib/prisma'
 import React from 'react'
-import { calculateTotal } from '@/lib/formats'
+import { calculateTotal, formatPrice } from '@/lib/formats'
 import { CashInBox } from '@/components/cash-in-box'
 import {
     type ExtendedProductsInSale,
@@ -299,8 +299,16 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                                         {productInSale.product.name}
                                     </td>
                                     <td>{productInSale.amount}</td>
-                                    <td>{productInSale.product.price}</td>
-                                    <td>{productInSale.total}</td>
+                                    <td>
+                                        {formatPrice.format(
+                                            productInSale.product.price
+                                        )}
+                                    </td>
+                                    <td>
+                                        {formatPrice.format(
+                                            productInSale.total
+                                        )}
+                                    </td>
                                 </tr>
                             )
                         })}

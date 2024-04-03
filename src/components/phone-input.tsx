@@ -15,7 +15,7 @@ export const PhoneInput = ({
         const customersWithAddress = customersFiltered.filter(
             (customer) => customer.id !== 1 && customer.address
         )
-
+        console.log(customersWithAddress)
         setCustomersFiltered(customersWithAddress)
         if (e.target.value.length === 0) {
             setCustomersFiltered(null)
