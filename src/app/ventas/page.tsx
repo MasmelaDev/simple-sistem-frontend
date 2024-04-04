@@ -12,6 +12,13 @@ import { IconX } from '@tabler/icons-react'
 const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
+    const year = today.getFullYear()
+    const month = ('0' + (today.getMonth() + 1)).slice(-2) // Se agrega 1 al mes ya que en JavaScript los meses van de 0 a 11
+    const day = ('0' + today.getDate()).slice(-2)
+
+    // Formatear la fecha
+    const fechaFormateada = year + '-' + month + '-' + day
+
     const sales = await db.sales.findMany({
         where: { createdAt: { gte: today } },
         include: {
@@ -49,6 +56,17 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                 <h1 className="text-center text-4xl font-semisemibold text-[#ffb400] py-10">
                     Venta Del Dia
                 </h1>
+                <label
+                    htmlFor=""
+                    className="flex flex-col justify-center items-center"
+                >
+                    <span>Elige una fecha para ver los pedidos</span>
+                    <input
+                        type="date"
+                        name="date"
+                        defaultValue={fechaFormateada}
+                    />
+                </label>
                 <section className="p-1 pb-10">
                     <h2 className="text-blue-600 mb-2 font-medium text-lg text-center">
                         Pedidos Pendientes
@@ -112,7 +130,7 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                                             </td>
                                             <td>
                                                 <span
-                                                    className={`py-[2px] w-12 xs:w-14 lg:w-16 block mx-auto rounded-md text-white ${sale.type === 'delivery' && 'bg-indigo-500'} ${sale.type === 'pickUp' && 'bg-teal-500'} ${sale.type === 'eatHere' && 'bg-yellow-400'}`}
+                                                    className={`py-[2px] w-12 xs:w-16 block mx-auto rounded-md text-white ${sale.type === 'delivery' && 'bg-indigo-500'} ${sale.type === 'pickUp' && 'bg-teal-500'} ${sale.type === 'eatHere' && 'bg-yellow-400'}`}
                                                 >
                                                     {sale.type}
                                                 </span>
@@ -194,7 +212,7 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                                             </td>
                                             <td>
                                                 <span
-                                                    className={`py-[2px] w-12 xs:w-14 lg:w-16 block mx-auto rounded-md text-white ${sale.type === 'delivery' && 'bg-indigo-500'} ${sale.type === 'pickUp' && 'bg-teal-500'} ${sale.type === 'eatHere' && 'bg-yellow-400'}`}
+                                                    className={`py-[2px] w-12 xs:w-16  block mx-auto rounded-md text-white ${sale.type === 'delivery' && 'bg-indigo-500'} ${sale.type === 'pickUp' && 'bg-teal-500'} ${sale.type === 'eatHere' && 'bg-yellow-400'}`}
                                                 >
                                                     {sale.type}
                                                 </span>
