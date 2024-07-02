@@ -2,11 +2,21 @@
 import { type ExtendedSales } from '@/interfaces/interfaces'
 import { calculateTotalSales, formatPrice } from '@/lib/formats'
 import { IconCheck } from '@tabler/icons-react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 export const CashInBox = ({ salesPaid }: { salesPaid: ExtendedSales[] }) => {
     const [initialCash, setInitialCash] = useState('0')
     const [editInitialCash, setEditInitialCash] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
+    const updateInitialCash = () => {
+        setEditInitialCash(false)
+        localStorage.setItem('initialCash', initialCash)
+    }
+    useEffect(() => {
+        const initialCash = localStorage.getItem('initialCash')
+        if (initialCash !== null) {
+            setInitialCash(initialCash)
+        }
+    }, [])
     return (
         <section className="flex flex-col gap-2 px-3 pb-10">
             <p className="flex gap-3 items-center justify-between">
@@ -16,7 +26,9 @@ export const CashInBox = ({ salesPaid }: { salesPaid: ExtendedSales[] }) => {
                         <input
                             ref={inputRef}
                             onKeyDown={(e) => {
-                                if (e.key === 'Enter') setEditInitialCash(false)
+                                if (e.key === 'Enter') {
+                                    updateInitialCash()
+                                }
                             }}
                             className="border rounded-md pl-2 py-1 focus:outline-none focus:boder-none w-20"
                             type="text"
@@ -30,7 +42,7 @@ export const CashInBox = ({ salesPaid }: { salesPaid: ExtendedSales[] }) => {
                             <IconCheck
                                 className=""
                                 size={20}
-                                onClick={() => setEditInitialCash(false)}
+                                onClick={updateInitialCash}
                             />
                         </button>
                     </span>
