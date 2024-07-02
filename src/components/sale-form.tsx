@@ -10,7 +10,6 @@ import {
 import { PhoneInput } from './phone-input'
 import { type neighborhood, type domiciliary } from '@prisma/client'
 import { AnimatePresence, motion } from 'framer-motion'
-
 export const SaleForm = ({
     searchParams,
     customers,
@@ -98,17 +97,19 @@ export const SaleForm = ({
                             />
                         </label>
                     )}
-                    <label htmlFor="name" className="flex flex-col w-full">
-                        <span>Nombre</span>
-                        <input
-                            autoComplete="off"
-                            className="border rounded-md pl-2 py-1 focus:outline-none focus:boder-none"
-                            type="text"
-                            required
-                            name="name"
-                            id="name"
-                        />
-                    </label>
+                    {saleType !== 'eatHere' && (
+                        <label htmlFor="name" className="flex flex-col w-full">
+                            <span>Nombre</span>
+                            <input
+                                autoComplete="off"
+                                className="border rounded-md pl-2 py-1 focus:outline-none focus:boder-none"
+                                type="text"
+                                required
+                                name="name"
+                                id="name"
+                            />
+                        </label>
+                    )}
                 </div>
                 <div className="flex gap-5 self-start px-5 xs:px-10  flex-col xs:flex-row md:flex-col">
                     <label htmlFor="" className="flex gap-2 items-center">

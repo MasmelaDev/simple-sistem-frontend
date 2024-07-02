@@ -28,7 +28,7 @@ export const NavMenu = () => {
                         animate={{ y: 0 }}
                         transition={{ duration: 0.5 }}
                         exit={{ y: -500 }}
-                        className="fixed top-0 w-full flex flex-col  bg-white rounded-md shadow-md z-50 "
+                        className="fixed top-0 w-full flex flex-col  bg-white rounded-md shadow-md z-[60] "
                     >
                         <button
                             className="absolute top-3 right-4"
@@ -58,7 +58,7 @@ export const NavMenu = () => {
                             <li>
                                 <Link
                                     onClick={() => setShowMenu(false)}
-                                    href="#"
+                                    href="/productos"
                                     className="flex items-center gap-2 text-xl"
                                 >
                                     <SandwichIcon /> Productos
@@ -67,7 +67,7 @@ export const NavMenu = () => {
                             <li>
                                 <Link
                                     onClick={() => setShowMenu(false)}
-                                    href="#"
+                                    href="/clientes"
                                     className="flex items-center gap-2 text-xl"
                                 >
                                     <IconUsers /> Clientes

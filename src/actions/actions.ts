@@ -87,7 +87,7 @@ export const addSale = async (formData: FormData) => {
             }
         }
 
-        await db.sales.create({
+       const sale =  await db.sales.create({
             data: {
                 status: 'pending',
                 deliveryPrice: +deliveryPrice,
@@ -115,32 +115,51 @@ export const addSale = async (formData: FormData) => {
             },
         })
 
-        const res = await fetch('http://localhost:8000/printTicket', {
-            method: 'POST',
+        // const res = await fetch('http://localhost:8000/printTicket', {
+        //     method: 'POST',
 
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                phone,
-                name,
-                saleType,
-                street,
-                number,
-                neighborhoodName,
-                domiciliary,
-                deliveryPrice,
-                observations,
-                productsInSale,
-            }),
-        })
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        //     body: JSON.stringify({
+        //         phone,
+        //         name,
+        //         saleType,
+        //         street,
+        //         number,
+        //         neighborhoodName,
+        //         domiciliary,
+        //         deliveryPrice,
+        //         observations,
+        //         productsInSale,
+        //     }),
+        // })
 
-        const data = await res.json()
-        console.log(data)
+        // const data = await res.json()
+        // console.log(data)
         revalidatePath('/')
+        return {sale, message:"good"}
     } catch (e) {
         console.log(e)
     }
+}
+
+export const createNeighborhood = async (formData: FormData) => {
+    const neighborhoodName = formData.get('neighborhood') as string
+    await db.neighborhood.create({
+        data: {
+            name: neighborhoodName,
+        },
+    })
+}
+
+export const createDomiciliary = async (formData: FormData) => {
+    const domiciliaryName = formData.get('domiciliary') as string
+    await db.domiciliary.create({
+        data: {
+            name: domiciliaryName,
+        },
+    })
 }
 
 export const updateSaleStatus = async (
