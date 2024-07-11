@@ -8,7 +8,9 @@ import {
 } from '@/interfaces/interfaces'
 import { UpdateSaleButton } from '@/components/update-sale-button'
 import Link from 'next/link'
-import { IconX } from '@tabler/icons-react'
+import { IconEdit, IconX } from '@tabler/icons-react'
+import { DeleteSaleButton } from '@/components/delete-sale-button'
+import { toast } from 'react-toastify'
 const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
@@ -50,6 +52,7 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
         minute: '2-digit',
         hour12: true, // Habilita el formato de 12 horas (AM/PM)
     }
+
     return (
         <main className="lg:flex gap-10 min-h-screen items-center lg:px-10">
             <section className="lg:w-7/12">
@@ -234,116 +237,142 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
             </section>
             <section
                 style={{ display: searchParams.sale ? 'flex' : '' }}
-                className="w-screen h-screen bg-white fixed top-0 left-0 z-50 hidden lg:flex flex-col lg:w-5/12  lg:overflow-y-auto lg:overflow-x-hidden  lg:shadow-md shadow-black/30 lg:border  lg:h-[calc(100vh-10rem)] lg:rounded-lg lg:relative p-5
-                pt-10 "
+                className="w-screen h-screen hidden lg:flex items-center lg:w-5/12 relative"
             >
-                <Link
-                    className="absolute top-2 right-2 lg:hidden block"
-                    href={'/ventas'}
+                <section
+                    style={{ display: searchParams.sale ? 'flex' : '' }}
+                    className="lg:w-5/12 w-screen h-screen bg-white fixed z-50 top-0 left-0 lg:top-auto lg:left-auto hidden lg:flex flex-col lg:overflow-y-auto lg:overflow-x-hidden  lg:shadow-md shadow-black/30 lg:border  lg:h-[calc(100vh-10rem)] lg:rounded-lg p-5
+                pt-10"
                 >
-                    <IconX size={28} />
-                </Link>
-                <h2 className="text-[#ffb400] font-semibold text-2xl text-center pb-8">
-                    {searchParams.sale
-                        ? `Detalles del pedido ${selectedSale?.id}`
-                        : `Selecciona un pedido para ver detalles`}
-                </h2>
-                <p className="mb-2">
-                    <span className="font-semibold mr-2">Nombre:</span>
-                    <span>{selectedSale?.customers?.name}</span>
-                </p>
-                <p className="mb-2">
-                    <span className="font-semibold mr-2">Telefono:</span>
-                    <span>{selectedSale?.customers?.phone}</span>
-                </p>
-                <p className="mb-2">
-                    <span className="font-semibold mr-2">Direccion:</span>
-                    <span>
-                        {selectedSale?.customers?.address?.street} #{' '}
-                        {selectedSale?.customers?.address?.number}
-                    </span>
-                </p>
-                <p className="mb-2">
-                    <span className="font-semibold mr-2">Barrio:</span>
-                    <span>
-                        {selectedSale?.customers?.address?.neighborhood.name}
-                    </span>
-                </p>
-                <p className="mb-2">
-                    <span className="font-semibold mr-2">Observaciones:</span>
-                    <span>{selectedSale?.observations}</span>
-                </p>
-                <p className="mb-2">
-                    <span className="font-semibold mr-2">Domiciliario:</span>
-                    <span>{selectedSale?.domiciliary?.name}</span>
-                </p>
-                <p className="mb-2">
-                    <span className="font-semibold mr-2">
-                        Estado del pedido:
-                    </span>
-                    <span>{selectedSale?.status}</span>
-                </p>
-                <p className="mb-2">
-                    <span className="font-semibold mr-2">Tipo de pedido:</span>
-                    <span>{selectedSale?.type}</span>
-                </p>
-                <p className="mb-10">
-                    <span className="font-semibold mr-2">Fecha:</span>
-                    <span>
-                        {selectedSale?.createdAt.toLocaleDateString(
-                            'en-US',
-                            options
+                    <Link
+                        className="absolute top-2 right-2 lg:hidden block"
+                        href={'/ventas'}
+                    >
+                        <IconX size={28} />
+                    </Link>
+                    <div className="flex text-[#ffb400] relative justify-center items-center pb-8">
+                        <h2 className=" font-semibold text-2xl text-center ">
+                            {searchParams.sale
+                                ? `Detalles del pedido ${selectedSale?.id}`
+                                : `Selecciona un pedido para ver detalles`}
+                        </h2>
+                        {selectedSale && (
+                            <div className="absolute right-2 flex gap-2">
+                                <DeleteSaleButton saleId={selectedSale.id} />
+                                <button className="text-white bg-[#ffb400] rounded-md shadow p-1 ">
+                                    <IconEdit size={28} />
+                                </button>
+                            </div>
                         )}
-                    </span>
-                </p>
+                    </div>
+                    <p className="mb-2">
+                        <span className="font-semibold mr-2">Nombre:</span>
+                        <span>{selectedSale?.customers?.name}</span>
+                    </p>
+                    <p className="mb-2">
+                        <span className="font-semibold mr-2">Telefono:</span>
+                        <span>{selectedSale?.customers?.phone}</span>
+                    </p>
+                    <p className="mb-2">
+                        <span className="font-semibold mr-2">Direccion:</span>
+                        <span>
+                            {selectedSale?.customers?.address?.street} #{' '}
+                            {selectedSale?.customers?.address?.number}
+                        </span>
+                    </p>
+                    <p className="mb-2">
+                        <span className="font-semibold mr-2">Barrio:</span>
+                        <span>
+                            {
+                                selectedSale?.customers?.address?.neighborhood
+                                    .name
+                            }
+                        </span>
+                    </p>
+                    <p className="mb-2">
+                        <span className="font-semibold mr-2">
+                            Observaciones:
+                        </span>
+                        <span>{selectedSale?.observations}</span>
+                    </p>
+                    <p className="mb-2">
+                        <span className="font-semibold mr-2">
+                            Domiciliario:
+                        </span>
+                        <span>{selectedSale?.domiciliary?.name}</span>
+                    </p>
+                    <p className="mb-2">
+                        <span className="font-semibold mr-2">
+                            Estado del pedido:
+                        </span>
+                        <span>{selectedSale?.status}</span>
+                    </p>
+                    <p className="mb-2">
+                        <span className="font-semibold mr-2">
+                            Tipo de pedido:
+                        </span>
+                        <span>{selectedSale?.type}</span>
+                    </p>
+                    <p className="mb-10">
+                        <span className="font-semibold mr-2">Fecha:</span>
+                        <span>
+                            {selectedSale?.createdAt.toLocaleDateString(
+                                'en-US',
+                                options
+                            )}
+                        </span>
+                    </p>
 
-                <table className="rounded-md overflow-hidden shadow shadow-black/30">
-                    <thead>
-                        <tr className="bg-[#ffb400] text-white h-12 ">
-                            <th className="w-1/4">Producto</th>
-                            <th className="w-1/4">Cantidad</th>
-                            <th className="w-1/4">Precio</th>
-                            <th className="w-1/4">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {selectedSale?.productsInSale.map((productInSale) => {
-                            return (
-                                <tr
-                                    className="text-center border-b h-12  "
-                                    key={productInSale.id}
-                                >
-                                    <td className=" ">
-                                        {productInSale.product.name}
-                                    </td>
-                                    <td>{productInSale.amount}</td>
-                                    <td>
-                                        {formatPrice.format(
-                                            productInSale.product.price
+                    <table className="rounded-md overflow-hidden shadow shadow-black/30">
+                        <thead>
+                            <tr className="bg-[#ffb400] text-white h-12 ">
+                                <th className="w-1/4">Producto</th>
+                                <th className="w-1/4">Cantidad</th>
+                                <th className="w-1/4">Precio</th>
+                                <th className="w-1/4">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {selectedSale?.productsInSale.map(
+                                (productInSale) => {
+                                    return (
+                                        <tr
+                                            className="text-center border-b h-12  "
+                                            key={productInSale.id}
+                                        >
+                                            <td className=" ">
+                                                {productInSale.product.name}
+                                            </td>
+                                            <td>{productInSale.amount}</td>
+                                            <td>
+                                                {formatPrice.format(
+                                                    productInSale.product.price
+                                                )}
+                                            </td>
+                                            <td>
+                                                {formatPrice.format(
+                                                    productInSale.total
+                                                )}
+                                            </td>
+                                        </tr>
+                                    )
+                                }
+                            )}
+                            <tr className="h-12">
+                                <td colSpan={3} className="text-right border">
+                                    <span className="mr-1">Total:</span>
+                                </td>
+                                <td colSpan={1} className="text-left border">
+                                    <span className="ml-1">
+                                        {calculateTotal(
+                                            selectedSale?.productsInSale as ExtendedProductsInSale[]
                                         )}
-                                    </td>
-                                    <td>
-                                        {formatPrice.format(
-                                            productInSale.total
-                                        )}
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                        <tr className="h-12">
-                            <td colSpan={3} className="text-right border">
-                                <span className="mr-1">Total:</span>
-                            </td>
-                            <td colSpan={1} className="text-left border">
-                                <span className="ml-1">
-                                    {calculateTotal(
-                                        selectedSale?.productsInSale as ExtendedProductsInSale[]
-                                    )}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
             </section>
         </main>
     )

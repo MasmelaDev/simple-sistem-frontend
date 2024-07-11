@@ -144,6 +144,30 @@ export const addSale = async (formData: FormData) => {
     }
 }
 
+
+export const deleteSale = async (saleId: number) => {
+    try {
+        await db.productsInSale.deleteMany({
+            where: {
+                saleId}
+        })
+
+        await db.sales.delete({
+            where: {
+                id: saleId,
+            },
+        })
+        revalidatePath('/')
+        return {status:200, message:"Pedido eliminado con éxito"}
+
+    } catch (e) {
+        console.log(e)
+        return {status:500,message:"Error al eliminar el pedido"}
+    }
+
+}
+
+
 export const createNeighborhood = async (formData: FormData) => {
     const neighborhoodName = formData.get('neighborhood') as string
     await db.neighborhood.create({

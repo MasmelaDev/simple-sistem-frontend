@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Livvic } from 'next/font/google'
 import './globals.css'
 import { NavMenu } from '@/components/nav-menu'
+import { ToastContainer } from 'react-toastify'
 
 const livvic = Livvic({
     subsets: ['latin'],
@@ -25,6 +26,7 @@ export default function RootLayout({
                     <NavMenu />
                 </header>
                 {children}
+                <ToastContainer />
             </body>
         </html>
     )

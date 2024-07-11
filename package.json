@@ -11,11 +11,13 @@
   "dependencies": {
     "@prisma/client": "^5.11.0",
     "@tabler/icons-react": "^3.1.0",
+    "ag-grid-community": "^32.0.0",
     "ag-grid-react": "^32.0.0",
     "framer-motion": "^11.0.24",
     "next": "14.1.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-toastify": "^10.0.5"
   },
   "devDependencies": {
     "@types/node": "^20",
