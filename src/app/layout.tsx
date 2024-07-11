@@ -3,7 +3,7 @@ import { Livvic } from 'next/font/google'
 import './globals.css'
 import { NavMenu } from '@/components/nav-menu'
 import { ToastContainer } from 'react-toastify'
-
+import 'react-toastify/dist/ReactToastify.css'
 const livvic = Livvic({
     subsets: ['latin'],
     weight: ['400', '500', '600', '700'],
@@ -26,7 +26,7 @@ export default function RootLayout({
                     <NavMenu />
                 </header>
                 {children}
-                <ToastContainer />
+                <ToastContainer position="bottom-left" />
             </body>
         </html>
     )

@@ -3,6 +3,7 @@ import { useTransition } from 'react'
 import { deleteSale } from '../actions/actions'
 import { IconTrash } from '@tabler/icons-react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 export const DeleteSaleButton = ({
     saleId,
 }: {
@@ -15,10 +16,10 @@ export const DeleteSaleButton = ({
             if (saleId) {
                 const res = await deleteSale(saleId)
                 if (res.status === 200) {
-                    alert(res.message)
+                    toast.success(res.message)
                     router.push('/ventas')
                 } else {
-                    alert(res.message)
+                    toast.error(res.message)
                 }
             }
         })

@@ -10,7 +10,6 @@ import { UpdateSaleButton } from '@/components/update-sale-button'
 import Link from 'next/link'
 import { IconEdit, IconX } from '@tabler/icons-react'
 import { DeleteSaleButton } from '@/components/delete-sale-button'
-import { toast } from 'react-toastify'
 const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
@@ -91,7 +90,8 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                             {salesPending.length === 0 && (
                                 <tr
                                     key={'sinPedidosPending'}
-                                    className="text-center  h-10 "
+                                    id={'sinPedidosPending'}
+                                    className="text-center h-10 "
                                 >
                                     <td colSpan={6}>
                                         No hay pedidos pendientes
@@ -100,9 +100,8 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                             )}
                             {salesPending.map((sale) => {
                                 return (
-                                    <>
+                                    <React.Fragment key={sale.id}>
                                         <tr
-                                            key={`clickerPending${sale.id}`}
                                             id={`clickerPending${sale.id}`}
                                             className="text-center h-10 absolute z-40 w-full "
                                         >
@@ -116,7 +115,6 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                                         <tr
                                             id={`${sale.id}`}
                                             className="text-center  h-10  border-b "
-                                            key={sale.id}
                                         >
                                             <td>
                                                 {sale.createdAt.toLocaleDateString(
@@ -149,7 +147,7 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                                                 />
                                             </td>
                                         </tr>
-                                    </>
+                                    </React.Fragment>
                                 )
                             })}
                         </tbody>
@@ -182,9 +180,8 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                             )}
                             {salesPaid.map((sale) => {
                                 return (
-                                    <>
+                                    <React.Fragment key={sale.id}>
                                         <tr
-                                            key={`clickerPaid${sale.id}`}
                                             id={`clickerPaid${sale.id}`}
                                             className="text-center  h-10 absolute z-40 w-full "
                                         >
@@ -197,8 +194,7 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                                         </tr>
                                         <tr
                                             id={`${sale.id}`}
-                                            className="text-center  h-10 border-b"
-                                            key={sale.id}
+                                            className="text-center h-10 border-b"
                                         >
                                             <td>
                                                 {sale.createdAt.toLocaleDateString(
@@ -226,7 +222,7 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                                                 )}
                                             </td>
                                         </tr>
-                                    </>
+                                    </React.Fragment>
                                 )
                             })}
                         </tbody>
