@@ -1,5 +1,4 @@
 'use server'
-
 import { db } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 
@@ -115,28 +114,27 @@ export const addSale = async (formData: FormData) => {
             },
         })
 
-        // const res = await fetch('http://localhost:8000/printTicket', {
-        //     method: 'POST',
+        const res = await fetch('http://localhost:8000/printTicket', {
+            method: 'POST',
 
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         phone,
-        //         name,
-        //         saleType,
-        //         street,
-        //         number,
-        //         neighborhoodName,
-        //         domiciliary,
-        //         deliveryPrice,
-        //         observations,
-        //         productsInSale,
-        //     }),
-        // })
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                phone,
+                name: saleType === 'eatHere' ? 'Comer aquí' : name,
+                saleType,
+                street,
+                number,
+                neighborhoodName,
+                deliveryPrice,
+                observations,
+                productsInSale,
+            }),
+        })
 
-        // const data = await res.json()
-        // console.log(data)
+        const data = await res.json()
+        console.log(data)
         revalidatePath('/')
         return {sale, message:"good"}
     } catch (e) {
@@ -145,14 +143,73 @@ export const addSale = async (formData: FormData) => {
 }
 
 
+export const printTicket = async (saleId: number) => {
+    try{
+
+        const sale = await db.sales.findUnique({
+            where: {
+                id: saleId,
+            },
+            include: {
+                customers: {
+                    include: {
+                        address: {
+                            include: {
+                                neighborhood: true,
+                            },
+                        },
+                },
+            },
+            productsInSale: {
+                include: {
+                    product: true,
+                },
+            },
+        },
+    })
+    
+    if(sale !== null){
+        const jsonProductsInSale = JSON.stringify(sale?.productsInSale)
+         await fetch('http://localhost:8000/printTicket', {
+            method: 'POST',
+            
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                phone: sale.customers?.phone,
+                name:
+                sale.type === 'eatHere'
+                ? 'Comer aquí'
+                : sale.customers?.name,
+                saleType: sale?.type,
+                street: sale.customers?.address?.street,
+                number: sale.customers?.address?.number,
+                neighborhoodName:
+                sale.customers?.address?.neighborhood?.name,
+                deliveryPrice: sale?.deliveryPrice ? sale?.deliveryPrice : "0",
+                observations: sale?.observations,
+                productsInSale: jsonProductsInSale,
+            })
+        })
+        return {status:200, message:"Pedido imprimido con éxito"}
+    }
+    return {status:500,message:"Error al imprimir el pedido"}
+
+}catch(e){
+    console.log(e)
+    return {status:500,message:"Error al imprimir el pedido"}
+}
+}
+
 export const deleteSale = async (saleId: number) => {
     try {
         await db.productsInSale.deleteMany({
             where: {
                 saleId}
-        })
-
-        await db.sales.delete({
+            })
+            
+            await db.sales.delete({
             where: {
                 id: saleId,
             },
@@ -168,20 +225,18 @@ export const deleteSale = async (saleId: number) => {
 }
 
 
-export const createNeighborhood = async (formData: FormData) => {
-    const neighborhoodName = formData.get('neighborhood') as string
+export const createNeighborhood = async (neighborhood: string) => {
     await db.neighborhood.create({
         data: {
-            name: neighborhoodName,
+            name: neighborhood,
         },
     })
 }
 
-export const createDomiciliary = async (formData: FormData) => {
-    const domiciliaryName = formData.get('domiciliary') as string
+export const createDomiciliary = async (domiciliary: string) => {
     await db.domiciliary.create({
         data: {
-            name: domiciliaryName,
+            name: domiciliary,
         },
     })
 }

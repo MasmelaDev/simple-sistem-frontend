@@ -10,6 +10,7 @@ import { UpdateSaleButton } from '@/components/update-sale-button'
 import Link from 'next/link'
 import { IconEdit, IconX } from '@tabler/icons-react'
 import { DeleteSaleButton } from '@/components/delete-sale-button'
+import { PrintTicketButton } from '@/components/print-ticket-button'
 const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
@@ -255,6 +256,7 @@ const Ventas = async ({ searchParams }: { searchParams: { sale: string } }) => {
                         {selectedSale && (
                             <div className="absolute right-2 flex gap-2">
                                 <DeleteSaleButton saleId={selectedSale.id} />
+                                <PrintTicketButton saleId={selectedSale.id} />
                                 <button className="text-white bg-[#ffb400] rounded-md shadow p-1 ">
                                     <IconEdit size={28} />
                                 </button>
